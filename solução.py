@@ -21,3 +21,21 @@ creator.create("Fitness", base.Fitness, weights=(1.0,))
 # a fitness definida anteriormente.
 creator.create("Individual", set, fitness=creator.Fitness)
 
+#inicializando a população e os indivíduos nelas.
+toolbox = base.Toolbox()
+toolbox.register("attr_item", random.randrange, NBR_ITEMS)
+toolbox.register("individual", tools.initRepeat, creator.Individual, 
+    toolbox.attr_item, IND_INIT_SIZE)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
+#Função de avaliação da muchila
+def AvaliarMochila(individual):
+    Peso = 0.0 
+    valor = 0.0
+    
+    for item in individual:
+        Peso += items[item][0]
+        valor += items[item][1]
+    if len(individual) > MAX_ITEM or Peso > PESO_MAX:
+        return 10000, 0             
+    return Peso, valor
