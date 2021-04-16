@@ -8,6 +8,7 @@ TAM_INICIAL = 5
 MAX_ITEM = 50
 PESO_MAX = 50
 NBR_ITEMS = 20
+IND_INIT_SIZE = 0
 
 # criando elementos randomicos e inserindo dentro da variável Items{}
 # item(valor,peso)
@@ -28,7 +29,7 @@ toolbox.register("individual", tools.initRepeat, creator.Individual,
     toolbox.attr_item, IND_INIT_SIZE)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-#Função de avaliação da muchila
+#Função de avaliação da mochila
 def AvaliarMochila(individual):
     Peso = 0.0 
     valor = 0.0
