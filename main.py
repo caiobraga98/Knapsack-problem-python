@@ -3,7 +3,7 @@ import numpy
 from deap import creator, base, tools, algorithms
 
 
-#inicializando as variavéis mas,podem ser alteradas no main
+#inicializando as variavéis, mas podem ser alteradas no main
 TAM_INICIAL = 5
 MAX_ITEM = 50
 PESO_MAX = 50
@@ -40,3 +40,20 @@ def AvaliarMochila(individual):
     if len(individual) > MAX_ITEM or Peso > PESO_MAX:
         return 10000, 0             
     return Peso, valor
+
+# Aplique uma operação de junção em conjuntos de entrada. O primeiro filho é a
+# intersecção dos dois conjuntos, o segundo filho é a diferença do dois conjuntos
+def cxSet(ind1, ind2):
+    temp = set(ind1)
+    ind1 &= ind2
+    ind2 ^= temp
+    return ind1, ind2
+
+# Mutação que aparece ou adiciona um elemento
+def mutaSet(individual):
+    if random.random() < 0.5:
+        if len(individual) > 0:     # We cannot pop from an empty set
+            individual.remove(random.choice(sorted(tuple(individual))))
+    else:
+        individual.add(random.randrange(NBR_ITEMS))
+    return individual,
