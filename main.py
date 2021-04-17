@@ -16,34 +16,21 @@ items = {}
 
 for i in range(NBR_ITEMS):
     items[i] = (random.randint(1, 10), random.uniform(0, 100))
-# Define o tipo fitness: Um objetivo com maximização
-creator.create("Fitness", base.Fitness, weights=(-1.0, 1.0))
-# Define o tipo indivíduo: indivíduo do tipo list (array) com
-# a fitness definida anteriormente.
-creator.create("Individual", set, fitness=creator.Fitness)
-# inicializando a população e os indivíduos nelas.
-toolbox = base.Toolbox()
-toolbox.register("attr_item", random.randrange, NBR_ITEMS)
-toolbox.register("individual", tools.initRepeat, creator.Individual,
-                 toolbox.attr_item, IND_INIT_SIZE)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 # Função de avaliação da mochila
 
-
 def evalMochila(individual):
-    weight = 0.0
-    value = 0.0
+    weight = 0
+    value = 0
     for item in individual:
         weight += items[item][0]
         value += items[item][1]
     if len(individual) > MAX_ITEM or weight > MAX_WEIGHT:
-        return 10000, 0
+        return 10000000, 0
     return weight, value
 
 # Aplique uma operação de junção em conjuntos de entrada. O primeiro filho é a
 # intersecção dos dois conjuntos, o segundo filho é a diferença do dois conjuntos
-
 
 def cxSet(ind1, ind2):
     temp = set(ind1)
@@ -53,7 +40,6 @@ def cxSet(ind1, ind2):
 
 # Mutação que aparece ou adiciona um elemento
 
-
 def mutSet(individual):
     if random.random() < 0.5:
         if len(individual) > 0:
@@ -62,14 +48,32 @@ def mutSet(individual):
         individual.add(random.randrange(NBR_ITEMS))
     return individual,
 
+# Define o tipo fitness: Um objetivo com maximização
+creator.create("Fitness", 
+    base.Fitness, weights=(-1.0, 1.0))
+# Define o tipo indivíduo: indivíduo do tipo list (array) com
+# a fitness definida anteriormente.
+creator.create("Individual", 
+    set, fitness=creator.Fitness)
+
+# inicializando a população e os indivíduos nelas.
+toolbox = base.Toolbox()
+
+toolbox.register("attr_item", 
+    random.randrange, NBR_ITEMS)
+
+toolbox.register("individual", 
+    tools.initRepeat, creator.Individual, toolbox.attr_item, IND_INIT_SIZE)
+
+toolbox.register("population", 
+    tools.initRepeat, list, toolbox.individual)
 
 toolbox.register("evaluate", evalMochila)
 toolbox.register("mate", cxSet)
 toolbox.register("mutate", mutSet)
 toolbox.register("select", tools.selNSGA2)
 
-# iniciando o main com alguns valores
-
+# iniciando o main com alguns valores e iniciando o processo de evolução
 
 def main():
     random.seed(64)
